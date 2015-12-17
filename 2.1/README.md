@@ -8,7 +8,12 @@ on [**mmath library**](https://github.com/YaDaniil/NURE-labs/blob/master/2.1/Mma
 on [**miracle library**](https://github.com/YaDaniil/NURE-labs/blob/master/2.1/manual.doc)
 
 Labs:
+
 1. Implementation RSA encrypting with generating prime digits P and Q using Leman and Div tests.(mmath.lib)
+
 2. Implementation PowMod function tщ raise to a power modulo and test this one.(miracl.lib)
+
 3. Implementation ElGamal digital signature.(miracl.lib)
+
 4. Implementation timing runtime of powmod2(Shamir method) and others routines and their comparison.(maracl.lib)
+
