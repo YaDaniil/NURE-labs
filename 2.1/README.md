@@ -15,5 +15,5 @@ Labs:
 
 3. Implementation ElGamal digital signature.(miracl.lib)
 
-4. Implementation timing runtime of powmod2(Shamir method) and others routines and their comparison.(maracl.lib)
+4. Implementation timing runtime of powmod2(Shamir method) and others routines and their comparison.(miracl.lib)
 
