@@ -1,2 +1,2 @@
 # NURE-labs
-A repo for university labs
+A repository for university labs
