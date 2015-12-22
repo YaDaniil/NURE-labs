@@ -39,56 +39,6 @@ void initStrongRng(csprng* Rng){
 	strong_init(Rng, 100, raw, time(NULL));
 }
 
-void powmod2Time(csprng rng, big x, big y, big a, big b, big p, big r){
-	ld temp = 999999999.0, min = 0;
-	ld sumMin = 0, clock = 0;
-
-	for (register int i = 0; i < 100; i++){
-		strong_bigrand(&rng, p, y);
-		strong_bigrand(&rng, p, b);
-		for (register int j = 0; j < 100; j++){
-
-			StartCounter();
-			powmod2(x, y, a, b, p, r);
-			clock = GetCounter();
-
-			if (clock < temp){
-				min = clock;
-				temp = min;
-			}
-		}
-	}
-	sumMin += min;
-	cout << "Time of execution powmod2 routine: " << (ld)sumMin / 1000 << endl;
-}
-
-void powmodTime(csprng rng, big x, big y, big a, big b, big p, big dest1, big dest2){
-	ld temp = 999999999.0, min = 0;
-	ld sumMin = 0, clock = 0;
-
-	for (register int i = 0; i < 100; i++){
-		strong_bigrand(&rng, p, y);
-		strong_bigrand(&rng, p, b);
-		for (register int j = 0; j < 100; j++){
-
-			StartCounter();
-			powmod(x, y, p, dest1);
-			powmod(a, b, p, dest2);
-			multiply(dest1, dest2, dest1);
-			divide(dest1, p, p);
-			clock = GetCounter();
-
-			if (clock < temp){
-				min = clock;
-				temp = min;
-			}
-		}
-	}
-	sumMin += min;
-	cout << "Time of execution powmod, powmod, multiply, divide routines: " << (ld)sumMin / 1000 << endl;
-
-}
-
 void PowMod(big x, big k, big n, big m){
 	int bit = 31;
 	for (; !((k->w[k->len - 1] >> bit) & 1); --bit);
@@ -105,58 +55,76 @@ void PowMod(big x, big k, big n, big m){
 	}
 }
 
-void PowModTime(csprng rng, big x, big y, big a, big b, big p, big dest1, big dest2){
-	ld temp = 999999999.0, min = 0;
-	ld sumMin = 0, clock = 0;
+void routinesTime(csprng rng, big x, big y, big a, big b, big p, big r1, big r2, big temp2, big r3, big temp3){
+	ld clock1 = 0, clock2 = 0, clock3 = 0;
+	ld min1 = 9999999999, min2 = 9999999999, min3 = 9999999999;
+	ld sumMin1 = 0, sumMin2 = 0, sumMin3 = 0;
 
 	for (register int i = 0; i < 100; i++){
 		strong_bigrand(&rng, p, y);
 		strong_bigrand(&rng, p, b);
-		for (register int j = 0; j < 100; j++){
+		for (register int j = 0; j < 10; j++){
 
 			StartCounter();
-			PowMod(x, y, p, dest1);
-			PowMod(a, b, p, dest2);
-			multiply(dest1, dest2, dest1);
-			divide(dest1, p, p);
-			clock = GetCounter();
+			powmod2(x, y, a, b, p, r1);
+			clock1 = GetCounter();
+			if (clock1 < min1)
+				min1 = clock1;
 
-			if (clock < temp){
-				min = clock;
-				temp = min;
-			}
+			StartCounter();
+			powmod(x, y, p, r2);
+			powmod(a, b, p, temp2);
+			multiply(r2, temp2, r2);
+			divide(r2, p, p);
+			clock2 = GetCounter();
+			if (clock2 < min2)
+				min2 = clock2;
+
+			StartCounter();
+			PowMod(x, y, p, r3);
+			PowMod(a, b, p, temp3);
+			multiply(r3, temp3, r3);
+			divide(r3, p, p);
+			clock3 = GetCounter();
+			if (clock3 < min3)
+				min3 = clock3;
 		}
+		sumMin1 += min1;
+		sumMin2 += min2;
+		sumMin3 += min3;
 	}
-	sumMin += min;
-	cout << "Time of execution PowMod, PowMod, multiply, divide routines: " << (ld)sumMin / 1000 << endl;
+	cout << "Time of execution powmod2 routine: " << (ld)sumMin1 << endl;
+	cout << "Time of execution powmod and others routines: " << (ld)sumMin2 << endl;
+	cout << "Time of execution PowMod and others routines: " << (ld)sumMin3 << endl;
 }
-
 
 int main()
 {
 	miracl* mip = mirsys(MAXLEN, BASE);
 	csprng rng;
 	initStrongRng(&rng);
-
 	big p = mirvar(1),
 		x = mirvar(1),
 		a = mirvar(1),
 		y = mirvar(1),
 		b = mirvar(1),
-		r = mirvar(1),
-		r2 = mirvar(1);
+		r1 = mirvar(1),
+		r2 = mirvar(1),
+		temp2 = mirvar(1),
+		r3 = mirvar(1),
+		temp3 = mirvar(1);
 	mip->IOBASE = 16;
 	cinstr(p, "6f18544dedb374f5ffbc3bcc7249bb52b09152ec9551dc2c7f6e2853a4db"
-	"a914a9bd6e9b70cd54ce31fe7bd3cc61f6d25d45c7fc11a20acc39b8708c9df3ef1d");
+		"a914a9bd6e9b70cd54ce31fe7bd3cc61f6d25d45c7fc11a20acc39b8708c9df3ef1d");
 	strong_bigrand(&rng, p, x);
 	strong_bigrand(&rng, p, a);
-	powmod2Time(rng, x, y, a, b, p, r);
-	powmodTime(rng, x, y, a, b, p, r, r2);
-	PowModTime(rng, x, y, a, b, p, r, r2);
-	mirkill(p); mirkill(a); mirkill(r); mirkill(r2);
+	routinesTime(rng, x, y, a, b, p, r1, r2, temp2, r3, temp3);
+
+	mirkill(p); mirkill(a); mirkill(r1); mirkill(r2);
+	mirkill(temp2); mirkill(r3); mirkill(temp3);
 	mirkill(x); mirkill(y); mirkill(b);
-	strong_kill(&rng);
 	mirexit();
+
 	cin.get();
 	return 0;
 }

@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Даниил\Documents\Visual Studio 2013\Projects\KNURE_labs\lab_2.1.4v2\lab_2.1.4v2\libs;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Даниил\Documents\Visual Studio 2013\Projects\KNURE_labs\lab_2.1.4v2\lab_2.1.4v2\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Даниил\Documents\NURE-labs\2.1\lab_2.1.4v2\lab_2.1.4v2\libs;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Даниил\Documents\NURE-labs\2.1\lab_2.1.4v2\lab_2.1.4v2\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -55,7 +55,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Даниил\Documents\Visual Studio 2013\Projects\KNURE_labs\lab_2.1.4v2\lab_2.1.4v2\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Даниил\Documents\NURE-labs\2.1\lab_2.1.4v2\lab_2.1.4v2\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
