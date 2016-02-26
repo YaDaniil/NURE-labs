@@ -22,8 +22,10 @@ void displayMenu()
 
 bool checkTheNumberCorrectness(char* number)
 {
+	if (strlen(number) > 12)
+		return false;
 	for (int i = 0; i < strlen(number); i++) {
-		if (isdigit(number[i])) {
+		if (!isdigit(number[i])) {
 			puts("The phone number is invalid.");
 			return false;
 		}
@@ -43,9 +45,19 @@ void addEntry()
 	printf("Input a surname: ");
 	scanf("%20s", &phoneBook[quantityOfContacts].surname);
 	fflush(stdin);
-	printf("Input a phone number: ");
-	scanf("%10s", &phoneBook[quantityOfContacts].phoneNumber);
+	do {
+		printf("Input a phone number: ");
+		scanf("%10s", &phoneBook[quantityOfContacts].phoneNumber);
+	} while (!checkTheNumberCorrectness(phoneBook[quantityOfContacts].phoneNumber));
 	fflush(stdin);
+
+	for (int i = 0; i < quantityOfContacts; i++) {
+		if (!strcmp(phoneBook[quantityOfContacts].phoneNumber, phoneBook[i].phoneNumber)) {
+			puts("Cannot be added to the phone book");
+			puts("The entry with this phone number is already exist.");
+			return;
+		}
+	}
 	
 	puts("A new contact was successfully added\n");
 	quantityOfContacts++;
@@ -53,13 +65,35 @@ void addEntry()
 
 void deleteEntry()
 {
+	if (quantityOfContacts == 0) {
+		puts("The phone book is empty. There is nothing to delete.");
+		return;
+	}
+
 	char numberToDelete[13];
 	do {
 		printf("Enter a phone number to remove the contact: ");
 		scanf("%s", numberToDelete);
-
 	} while (!checkTheNumberCorrectness(numberToDelete));
+
+	for (int i = 0; i < quantityOfContacts; i++) {
+		if (!strcmp(phoneBook[i].phoneNumber, numberToDelete)) {
+			puts("The contact below will be deleted.");
+			printf("%s %s\n", "Name:", phoneBook[i].name);
+			printf("%s %s\n", "Surname:", phoneBook[i].surname);
+			printf("%s %s\n\n", "Phone number:", phoneBook[i].phoneNumber);
 			
+			for (int j = i; j < quantityOfContacts; j++) {
+				strcpy(phoneBook[j].name, phoneBook[j + 1].name);
+				strcpy(phoneBook[j].surname, phoneBook[j + 1].surname);
+				strcpy(phoneBook[j].phoneNumber, phoneBook[j + 1].phoneNumber);
+			}
+			quantityOfContacts--;
+			break;
+		}
+		else
+			puts("There is no existing contact in phone book\n");
+	}		
 }
 
 void displayAllEntries()
@@ -82,7 +116,6 @@ void displayAllEntries()
 			printf("%s %s\n\n", "Phone number:", phoneBook[i].phoneNumber);
 		}
 	}
-	
 }
 
 void searchEntry()
@@ -116,35 +149,34 @@ void searchEntry()
 void runProgramm()
 {
 	displayMenu();
-	int choice = 0;
+	char choice = 0;
 	
 	do {
 		printf("Select an appropriate clause: ");
-		scanf("%d", &choice);
+		scanf("%1c", &choice);
+		fflush(stdin);
 		if (!isdigit(choice)) {
 			puts("Input parameters are incorrect. Try again.");
-			fflush(stdin);
 			return;
 		}
 			
 		switch (choice) {
-		case 1:
+		case '1':
 			addEntry();
 			break;
-		case 2:
+		case '2':
 			deleteEntry();
 			break;
-		case 3:
+		case '3':
 			searchEntry();
 			break;
-		case 4:
+		case '4':
 			displayAllEntries();
 			break;
-		case 5:
+		case '5':
 			exit(0);
 		default:
 			puts("Input parameters are incorrect. Try again.");
-			
 		}
-	} while (choice < 1 || choice > 4);
+	} while (choice < '1' || choice > '4');
 }
