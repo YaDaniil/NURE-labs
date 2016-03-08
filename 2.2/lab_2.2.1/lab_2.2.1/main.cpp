@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include "Header.h"
 
 int main()
@@ -18,6 +17,5 @@ int main()
 			exit(0);
 	} while (rerunProgramm != 'n');
 	
-	getchar();
 	return 0;
 }

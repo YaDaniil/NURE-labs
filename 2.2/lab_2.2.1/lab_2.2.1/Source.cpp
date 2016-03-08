@@ -1,11 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
-#define PHONE_BOOK_SIZE 20
 
-#include "Header.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
 #include <ctype.h>
+
+#include "Header.h"
 
 static int quantityOfContacts = 0;
 PhoneBook phoneBook[PHONE_BOOK_SIZE];
@@ -22,11 +22,11 @@ void displayMenu()
 
 bool checkTheNumberCorrectness(char* number)
 {
-	if (strlen(number) > 12)
+	if (strlen(number) > PHONE_SIZE - 1)
 		return false;
 	for (int i = 0; i < strlen(number); i++) {
-		if (!isdigit(number[i])) {
-			puts("The phone number is invalid.");
+		if (!isdigit(number[i]) || number[i] == '-') {
+				puts("The phone number is invalid.");
 			return false;
 		}
 		return true;
@@ -47,7 +47,7 @@ void addEntry()
 	fflush(stdin);
 	do {
 		printf("Input a phone number: ");
-		scanf("%10s", &phoneBook[quantityOfContacts].phoneNumber);
+		scanf("%12s", &phoneBook[quantityOfContacts].phoneNumber);
 	} while (!checkTheNumberCorrectness(phoneBook[quantityOfContacts].phoneNumber));
 	fflush(stdin);
 
@@ -70,18 +70,18 @@ void deleteEntry()
 		return;
 	}
 
-	char numberToDelete[13];
+	char numberToDelete[PHONE_SIZE];
 	do {
 		printf("Enter a phone number to remove the contact: ");
-		scanf("%s", numberToDelete);
+		scanf("%12s", numberToDelete);
 	} while (!checkTheNumberCorrectness(numberToDelete));
 
 	for (int i = 0; i < quantityOfContacts; i++) {
 		if (!strcmp(phoneBook[i].phoneNumber, numberToDelete)) {
 			puts("The contact below will be deleted.");
-			printf("%s %s\n", "Name:", phoneBook[i].name);
-			printf("%s %s\n", "Surname:", phoneBook[i].surname);
-			printf("%s %s\n\n", "Phone number:", phoneBook[i].phoneNumber);
+			printf("Name: %s\n", phoneBook[i].name);
+			printf("Surname: %s\n",  phoneBook[i].surname);
+			printf("Phone number: %s\n\n", phoneBook[i].phoneNumber);
 			
 			for (int j = i; j < quantityOfContacts; j++) {
 				strcpy(phoneBook[j].name, phoneBook[j + 1].name);
@@ -104,16 +104,16 @@ void displayAllEntries()
 	}
 	if (quantityOfContacts == 1) {
 		puts("There is 1 contact in your phone book.\n\n");
-		printf("%s %s\n", "Name:", phoneBook[quantityOfContacts - 1].name);
-		printf("%s %s\n", "Surname:", phoneBook[quantityOfContacts - 1].surname);
-		printf("%s %s\n\n", "Phone number:", phoneBook[quantityOfContacts - 1].phoneNumber);
+		printf("Name: %s\n", phoneBook[quantityOfContacts - 1].name);
+		printf("Surname: %s\n", phoneBook[quantityOfContacts - 1].surname);
+		printf("Phone number %s\n\n", phoneBook[quantityOfContacts - 1].phoneNumber);
 	}
 	else {
 		printf("%s %d %s", "The is ", quantityOfContacts, " contacts in your phone book.\n\n");
 		for (int i = 0; i < quantityOfContacts; i++) {
-			printf("%s %s\n", "Name:", phoneBook[i].name);
-			printf("%s %s\n", "Surname:", phoneBook[i].surname);
-			printf("%s %s\n\n", "Phone number:", phoneBook[i].phoneNumber);
+			printf("Name: %s\n", phoneBook[i].name);
+			printf("Surname: %s\n", phoneBook[i].surname);
+			printf("Phone number: %s\n\n", phoneBook[i].phoneNumber);
 		}
 	}
 }
@@ -125,7 +125,7 @@ void searchEntry()
 		puts("Add some contacts to search.\n");
 		return;
 	}
-	char searchBySurname[21];
+	char searchBySurname[SURNAME_SIZE];
 	printf("Input the surname to search and display contact:");
 	scanf("%20s", &searchBySurname);
 	fflush(stdin);
@@ -134,9 +134,9 @@ void searchEntry()
 
 		if (!strcmp(phoneBook[i].surname, searchBySurname)) {
 			puts("The contact is found!");
-			printf("%s, %s\n", "Name:", phoneBook[i].name);
-			printf("%s, %s\n", "Surname:", phoneBook[i].surname);
-			printf("%s, %s\n\n", "Phone number:", phoneBook[i].phoneNumber);
+			printf("Name: %s\n", phoneBook[i].name);
+			printf("Surname: %s\n", phoneBook[i].surname);
+			printf("Phone number: %s\n\n", phoneBook[i].phoneNumber);
 			break;
 		}
 		else
