@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +6,7 @@
 
 #include "Header.h"
 
-static int quantityOfContacts = 0;
+int quantityOfContacts = 0;
 PhoneBook phoneBook[PHONE_BOOK_SIZE];
 
 void displayMenu()
