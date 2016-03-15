@@ -27,194 +27,21 @@ void deleteDblLinkedList(DblLinkedList **list)
 }
 
 
-
-void pushFront(DblLinkedList *list, char* name, char* surname, char* phoneNumber)
+void addNode(DblLinkedList *list, Node *node)
 {
-    Node *tmp = (Node*) malloc(sizeof(Node));
-    if (tmp == NULL) {
-        exit(1);
-    }
-    strcpy(tmp->name, name);
-    strcpy(tmp->surname, surname);
-    strcpy(tmp->phoneNumber, phoneNumber);
-    tmp->next = list->head;
-    tmp->prev = NULL;
-    if (list->head) {
-        list->head->prev = tmp;
-    }
-    list->head = tmp;
-
-    if (list->tail == NULL) {
-        list->tail = tmp;
+    if(!list->head) {
+        list->head = node;
+        list->tail = node;
+        node->next = NULL;
+        node->prev = NULL;
+    }else {
+        list->tail->next = node;
+        node->prev = list->tail;
+        list->tail = node;
     }
     list->size++;
 }
 
-
-Node* popFront(DblLinkedList *list)
-{
-    Node *prev;
-    Node* tmp;
-    if (list->head == NULL) {
-        exit(2);
-    }
-
-    prev = list->head;
-    list->head = list->head->next;
-    if (list->head) {
-        list->head->prev = NULL;
-    }
-    if (prev == list->tail) {
-        list->tail = NULL;
-    }
-
-    strcpy(tmp->name, prev->name);
-    strcpy(tmp->surname, prev->surname);
-    strcpy(tmp->phoneNumber, prev->phoneNumber);
-
-    free(prev);
-
-    list->size--;
-    return tmp;
-}
-
-
-void pushBack(DblLinkedList *list, char* name, char* surname, char* phoneNumber)
-{
-    Node *tmp = (Node*) malloc(sizeof(Node));
-    if (tmp == NULL) {
-        exit(3);
-    }
-    strcpy(tmp->name, name);
-    strcpy(tmp->surname, surname);
-    strcpy(tmp->phoneNumber, phoneNumber);
-
-    tmp->next = NULL;
-    tmp->prev = list->tail;
-
-    if (list->tail) {
-        list->tail->next = tmp;
-    }
-    list->tail = tmp;
-
-    if (list->head == NULL) {
-        list->head = tmp;
-    }
-    list->size++;
-}
-
-Node* popBack(DblLinkedList *list)
-{
-    Node *next;
-    Node* tmp;
-    if (list->tail == NULL) {
-        exit(4);
-    }
-
-    next = list->tail;
-    list->tail = list->tail->prev;
-    if (list->tail) {
-        list->tail->next = NULL;
-    }
-    if (next == list->head) {
-        list->head = NULL;
-    }
-    strcpy(tmp->name, next->name);
-    strcpy(tmp->surname, next->surname);
-    strcpy(tmp->phoneNumber, next->phoneNumber);
-    free(next);
-
-    list->size--;
-    return tmp;
-}
-
-Node* getNthq(DblLinkedList *list, size_t index)
-{
-    Node *tmp = NULL;
-    size_t i;
-
-    if (index < list->size/2) {
-        i = 0;
-        tmp = list->head;
-        while (tmp && i < index) {
-            tmp = tmp->next;
-            i++;
-        }
-    } else {
-        i = list->size - 1;
-        tmp = list->tail;
-        while (tmp && i > index) {
-            tmp = tmp->prev;
-            i--;
-        }
-    }
-
-    return tmp;
-}
-
-
-void insert(DblLinkedList *list, size_t index, char* name, char* surname, char* phoneNumber)
-{
-    Node *elm = NULL;
-    Node *ins = NULL;
-    elm = getNthq(list, index);
-    if (elm == NULL) {
-        exit(5);
-    }
-    ins = (Node*) malloc(sizeof(Node));
-    strcpy(ins->name, name);
-    strcpy(ins->surname, surname);
-    strcpy(ins->phoneNumber, phoneNumber);
-    ins->prev = elm;
-    ins->next = elm->next;
-    if (elm->next) {
-        elm->next->prev = ins;
-    }
-    elm->next = ins;
-
-    if (!elm->prev) {
-        list->head = elm;
-    }
-    if (!elm->next) {
-        list->tail = elm;
-    }
-
-    list->size++;
-}
-
-Node* deleteNth(DblLinkedList *list, size_t index)
-{
-    Node *elm = NULL;
-    Node *tmp = NULL;
-
-    elm = getNthq(list, index);
-    if (elm == NULL) {
-        exit(5);
-    }
-    if (elm->prev) {
-        elm->prev->next = elm->next;
-    }
-    if (elm->next) {
-        elm->next->prev = elm->prev;
-    }
-
-    strcpy(tmp->name, elm->name);
-    strcpy(tmp->surname, elm->surname);
-    strcpy(tmp->phoneNumber, elm->phoneNumber);
-
-    if (!elm->prev) {
-        list->head = elm->next;
-    }
-    if (!elm->next) {
-        list->tail = elm->prev;
-    }
-
-    free(elm);
-
-    list->size--;
-
-    return tmp;
-}
 
 void printDblLinkedList(DblLinkedList *list)
 {
@@ -228,7 +55,6 @@ void printDblLinkedList(DblLinkedList *list)
     }
     printf("\n");
 }
-
 
 
 void clean()
@@ -262,40 +88,61 @@ void displayMenu()
     puts("8. Exit program\n");
 }
 
-void addEntry(DblLinkedList* list)
+
+void addEntry(DblLinkedList * list)
 {
-    char* name;// = "\0";
-    char* surname;// = "\0";
-    char* phoneNumber;// = "\0";
+    Node * current = malloc(sizeof(Node));
+
+    if(!current)
+        return;
+
     printf("Input a name: ");
-    scanf("%10s", &name);
+    scanf("%10s", current->name);
     clean();
     printf("Input a surname: ");
-    scanf("%20s", &surname);
+    scanf("%20s", current->surname);
     clean();
 
     do {
         printf("Input a phone number: ");
-        scanf("%12s", &phoneNumber);
-    } while (!checkNumberCorrectness(&phoneNumber));
+        scanf("%12s", current->phoneNumber);
+    } while (!checkNumberCorrectness(current->phoneNumber));
     clean();
 
-    /*
-    This doesn't work!! Exit code 139(segmentation fault)
     Node* tmp = list->head;
 
-    while(tmp != NULL) {
-        if (!strcmp(phoneNumber, tmp->phoneNumber)) {
+    while(tmp) {
+        if (!strcmp(current->phoneNumber, tmp->phoneNumber)) {
             puts("Cannot be added to the phone book");
             puts("The contact with this phone number is already exist.");
             return;
         }
         tmp = tmp->next;
     }
-*/
-    pushBack(list, &name, &surname, &phoneNumber);
-
+    addNode(list, current);
     puts("A new contact was successfully added\n");
+
+}
+
+void deleteNode(DblLinkedList *list, Node *node)
+{
+    if(list->head == list->tail) {
+        free(list->head);
+        list->head = list->tail = NULL;
+    } else if(node == list->head) {
+        list->head = list->head->next;
+        free(list->head->prev);
+        list->head->prev = NULL;
+    } else if(node == list->tail) {
+        list->tail = list->tail->prev;
+        free(list->tail->next);
+        list->tail->next = NULL;
+    } else {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        free(node);
+    }
+    list->size--;
 }
 
 void deleteEntry(DblLinkedList* list)
@@ -311,18 +158,21 @@ void deleteEntry(DblLinkedList* list)
         scanf("%12s", numberToDelete);
     } while (!checkNumberCorrectness(numberToDelete));
 
-    for (int i = 0; i < list->size; i++) {
-        if (!strcmp(getNthq(list, i)->phoneNumber, numberToDelete)) {
+    Node *tmp = list->head;
+
+    while(tmp) {
+        if (!strcmp(tmp->phoneNumber, numberToDelete)) {
             puts("The contact below will be deleted.");
-            printf("Name: %s\n", getNthq(list, i)->name);
-            printf("Surname: %s\n",  getNthq(list, i)->surname);
-            printf("Phone number: %s\n\n", getNthq(list, i)->phoneNumber);
-            deleteNth(list, (size_t) i);
-            break;
+            printf("Name: %s\n", tmp->name);
+            printf("Surname: %s\n",  tmp->surname);
+            printf("Phone number: %s\n\n", tmp->phoneNumber);
+
+            deleteNode(list, tmp);
+            return;
         }
-        else
-            puts("There is no existing contact in phone book\n");
+        tmp = tmp->next;
     }
+    puts("There is no existing contact in phone book\n");
 }
 
 void displayAllEntries(DblLinkedList* list)
@@ -355,13 +205,13 @@ void searchEntry(DblLinkedList* list)
     clean();
 
     Node* tmp = list->head;
-    while(tmp != NULL) {
+    while(tmp) {
         if (!strcmp(tmp->surname, searchBySurname)) {
             puts("The contact is found!");
             printf("Name: %s\n", tmp->name);
             printf("Surname: %s\n", tmp->surname);
             printf("Phone number %s\n\n", tmp->phoneNumber);
-            break;
+            return;
         }else
             puts("There is no existing contact in phone book\n");
         tmp = tmp->next;
@@ -379,8 +229,8 @@ void sortEntries(DblLinkedList *list)
         for(int j = 0; j < count - 1 - i; j++ )
         {
             if(strcmp(current->surname, current->next->surname) > 0 ||
-                        (strcmp(current->surname, current->next->surname) == 0 &&
-                            strcmp(current->name, current->next->name) > 0))
+               (strcmp(current->surname, current->next->surname) == 0 &&
+                strcmp(current->name, current->next->name) > 0))
             {
                 next = current->next;
                 current->next = next->next;
@@ -407,7 +257,6 @@ void sortEntries(DblLinkedList *list)
 
 void saveInTheFile(DblLinkedList* list)
 {
-    puts("Save");
     FILE* file = fopen("/home/yadaniil/phone.dat", "a");
     if(!file) {
         puts("ERROR. The file cannot be opened");
@@ -423,7 +272,7 @@ void saveInTheFile(DblLinkedList* list)
     }
     fclose(file);
 
-    puts("Your contacts have been successfully written to the file : \"phone.dat\"");
+    puts("Your contacts have been successfully written to the file : \"phone.dat\"\n");
 }
 
 void retrieveFromTheFile(DblLinkedList* list)
@@ -435,20 +284,18 @@ void retrieveFromTheFile(DblLinkedList* list)
     }
 
     Node *tmp = list->head;
-    char *name, *surname, *phoneNumber;
-    char *str;
+    //char name[NAME_SIZE], surname[SURNAME_SIZE], phoneNumber[PHONE_SIZE];
+    char str[20];
 
+    puts("koko");
     while (!feof(file)) {
-        fscanf(file, "%s %s", &str, &name);
-        fscanf(file, "%s %s", &str, &surname);
-        fscanf(file, "%s %s %s", &str, &str, &phoneNumber);
-        printf("%s\n", name);
-        printf("%s\n", surname);
-        printf("%s\n\n", phoneNumber);
-        puts("koko");
-        pushBack(list, &name, &surname, &phoneNumber);
-        puts("moloko");
-        tmp = tmp->next;
+        fscanf(file, "%s %s", str, tmp->name);
+        fscanf(file, "%s %s", str, tmp->surname);
+        fscanf(file, "%s %s %s", str, str, tmp->phoneNumber);
+        printf("%s\n", tmp->name);
+        printf("%s\n", tmp->surname);
+        printf("%s\n\n", tmp->phoneNumber);
+        addNode(list, tmp);
     }
 
     fclose(file);

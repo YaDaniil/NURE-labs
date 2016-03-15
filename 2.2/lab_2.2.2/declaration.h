@@ -24,14 +24,10 @@ typedef struct _DblLinkedList {
 
 DblLinkedList* createDblLinkedList();
 void deleteDblLinkedList(DblLinkedList **list);
-void pushFront(DblLinkedList *list, char* name, char* surname, char* phoneNumber);
-Node* popFront(DblLinkedList *list);
-void pushBack(DblLinkedList *list, char* name, char* surname, char* phoneNumber);
-Node* popBack(DblLinkedList *list);
-Node* getNthq(DblLinkedList *list, size_t index);
-void insert(DblLinkedList *list, size_t index, char* name, char* surname, char* phoneNumber);
-Node* deleteNth(DblLinkedList *list, size_t index);
+void addNode(DblLinkedList *list, Node *node);
+void deleteNode(DblLinkedList *list, Node *node);
 void printDblLinkedList(DblLinkedList *list);
+
 
 void clean();
 int checkNumberCorrectness(char* number);
