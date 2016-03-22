@@ -46,8 +46,8 @@ void addNode(DblLinkedList *list, Node *node)
 void printDblLinkedList(DblLinkedList *list)
 {
     Node* tmp = list->head;
-    printf("You have %d contacts:\n", (int) list->size);
-    while(tmp != NULL) {
+    printf("You have %d contacts:\n\n", list->size);
+    while(tmp) {
         printf("Name: %s\n", tmp->name);
         printf("Surname: %s\n", tmp->surname);
         printf("Phone number %s\n\n", tmp->phoneNumber);
@@ -91,7 +91,7 @@ void displayMenu()
 
 void addEntry(DblLinkedList * list)
 {
-    Node * current = malloc(sizeof(Node));
+    Node *current = malloc(sizeof(Node));
 
     if(!current)
         return;
@@ -181,7 +181,7 @@ void displayAllEntries(DblLinkedList* list)
         puts("Your phone book is empty.\n");
         return;
     }
-    if (list->size == 1) {
+   if (list->size == 1) {
         puts("There is 1 contact in your phone book.\n\n");
         printf("Name: %s\n", list->head->name);
         printf("Surname: %s\n", list->head->surname);
@@ -265,9 +265,11 @@ void saveInTheFile(DblLinkedList* list)
 
     Node* tmp = list->head;
     while(tmp) {
+
         fprintf(file, "Name: %s\n", tmp->name);
         fprintf(file, "Surname: %s\n", tmp->surname);
         fprintf(file, "Phone number: %s\n\n", tmp->phoneNumber);
+
         tmp = tmp->next;
     }
     fclose(file);
@@ -275,32 +277,55 @@ void saveInTheFile(DblLinkedList* list)
     puts("Your contacts have been successfully written to the file : \"phone.dat\"\n");
 }
 
+
 void retrieveFromTheFile(DblLinkedList* list)
 {
-    FILE* file = fopen("/home/yadaniil/phone.dat", "rb");
+    FILE* file = fopen("/home/yadaniil/phone.dat", "r");
     if(!file) {
         puts("ERROR. The file cannot be opened");
         return;
     }
 
-    Node *tmp = list->head;
-    //char name[NAME_SIZE], surname[SURNAME_SIZE], phoneNumber[PHONE_SIZE];
-    char str[20];
+    Node *tmp;
+    Node *cur;
+    char str[10];
 
-    puts("koko");
+
     while (!feof(file)) {
-        fscanf(file, "%s %s", str, tmp->name);
-        fscanf(file, "%s %s", str, tmp->surname);
-        fscanf(file, "%s %s %s", str, str, tmp->phoneNumber);
-        printf("%s\n", tmp->name);
-        printf("%s\n", tmp->surname);
-        printf("%s\n\n", tmp->phoneNumber);
+        tmp = malloc(sizeof(Node));
+
+        fscanf(file, "%s %s\n", str, tmp->name);
+        fscanf(file, "%s %s\n", str, tmp->surname);
+        fscanf(file, "%s %s %s\n\n", str, str, tmp->phoneNumber);
         addNode(list, tmp);
+/*
+        if(list->head)
+            cur = list->head;
+
+        if(list->head) {
+            while(cur) {
+                if (!strcmp(cur->phoneNumber, tmp->phoneNumber)) {
+                    printf("Contact with phone number %s ", cur->phoneNumber);
+                    puts("cannot be added to the phone book");
+                    puts("The contact with this phone number is already exist.");
+                } else {
+                    addNode(list, tmp);
+                }
+                if(cur->next)
+                    cur = cur->next;
+                else
+                    break;
+            }
+        } else {
+            addNode(list, tmp);
+        }
+        */
     }
 
     fclose(file);
     puts("Your contacts have been successfully retrieved from the file : \"phone.dat\"");
 }
+
 
 void runProgram(DblLinkedList *list)
 {
