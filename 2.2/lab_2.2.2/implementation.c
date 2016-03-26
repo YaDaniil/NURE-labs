@@ -293,16 +293,16 @@ void retrieveFromTheFile(DblLinkedList* list)
 
     while (!feof(file)) {
         tmp = malloc(sizeof(Node));
-
+        cur = malloc(sizeof(Node));
         fscanf(file, "%s %s\n", str, tmp->name);
         fscanf(file, "%s %s\n", str, tmp->surname);
         fscanf(file, "%s %s %s\n\n", str, str, tmp->phoneNumber);
         addNode(list, tmp);
-/*
-        if(list->head)
-            cur = list->head;
+        /*/////////////////////////
+
 
         if(list->head) {
+            cur = list->head;
             while(cur) {
                 if (!strcmp(cur->phoneNumber, tmp->phoneNumber)) {
                     printf("Contact with phone number %s ", cur->phoneNumber);
@@ -319,7 +319,7 @@ void retrieveFromTheFile(DblLinkedList* list)
         } else {
             addNode(list, tmp);
         }
-        */
+        ///////////////////*/
     }
 
     fclose(file);

@@ -8,7 +8,7 @@ int main()
     int arr2[] = {1, 2, 6};
     Integer integer1(arr1);
     Integer integer2(arr2);
-    Integer integer3();
+
     cout << "Demonstration of ostream(<<) overloading: " << endl;
     cout << "integer1: ";
     cout << integer1;
@@ -27,7 +27,10 @@ int main()
     cout << integer1[2] << endl;
 
     cout << "Demonstration of istream(>>) overloading: " << endl;
-    cin >> integer3;
+    cin >> integer1;
+
+    cout << "integer1 now consists :";
+    cout << integer1;
 
     cin.get();
     return 0;
