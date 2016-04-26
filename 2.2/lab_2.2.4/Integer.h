@@ -12,15 +12,15 @@ class Integer {
 
 private:
 
-    int *array;
-    unsigned int length;
+    vector<int> array;
 
 public:
 
     Integer();
-    ~Integer();
 
     Integer(int arr[]);
+
+    Integer(vector<int> arr);
 
     Integer operator = (const Integer &obj);
 
@@ -35,5 +35,7 @@ public:
     friend istream& operator >> (istream &input, Integer &obj);
 
 };
+
+
 
 #endif //LAB_2_2_3_INTEGER_H

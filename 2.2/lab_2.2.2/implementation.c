@@ -287,43 +287,41 @@ void retrieveFromTheFile(DblLinkedList* list)
     }
 
     Node *tmp;
-    Node *cur;
+    Node *cur = list->head;;
     char str[10];
-
+    int doins;
+    int atLeastOneWasRetrieved = 0;
 
     while (!feof(file)) {
         tmp = malloc(sizeof(Node));
-        cur = malloc(sizeof(Node));
+
+
         fscanf(file, "%s %s\n", str, tmp->name);
         fscanf(file, "%s %s\n", str, tmp->surname);
         fscanf(file, "%s %s %s\n\n", str, str, tmp->phoneNumber);
-        addNode(list, tmp);
-        /*/////////////////////////
 
+        doins = 1;
 
-        if(list->head) {
-            cur = list->head;
-            while(cur) {
+        while(cur) {
                 if (!strcmp(cur->phoneNumber, tmp->phoneNumber)) {
                     printf("Contact with phone number %s ", cur->phoneNumber);
                     puts("cannot be added to the phone book");
                     puts("The contact with this phone number is already exist.");
-                } else {
-                    addNode(list, tmp);
-                }
-                if(cur->next)
-                    cur = cur->next;
-                else
+                    doins = 0;
                     break;
-            }
-        } else {
-            addNode(list, tmp);
+                }
+                cur = cur->next;
         }
-        ///////////////////*/
+        if (doins) {
+            addNode(list, tmp);
+            atLeastOneWasRetrieved = 1;
+        }
+
     }
 
     fclose(file);
-    puts("Your contacts have been successfully retrieved from the file : \"phone.dat\"");
+    if(atLeastOneWasRetrieved)
+        puts("Your contacts have been successfully retrieved from the file : \"phone.dat\"");
 }
 
 

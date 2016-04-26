@@ -6,10 +6,8 @@ int main()
 {
     int arr1[] = {10, 20, 144};
     int arr2[] = {1, 2, 6};
-
     Integer integer1(arr1);
     Integer integer2(arr2);
-
 
     cout << "Demonstration of ostream(<<) overloading: " << endl;
     cout << "integer1: ";
@@ -26,23 +24,14 @@ int main()
 
     cout << "Demonstration of \'[]\' operator overloading: " << endl;
     cout << "integer1[2] : ";
-    cout << integer1[2] << endl;
+    cout << integer1[7] << endl;
 
-
-    cout << "Demonstration of istream(>>) overloading(integer1) : " << endl;
+    cout << "Demonstration of istream(>>) overloading: " << endl;
     cin >> integer1;
-    cout << "Demonstration of istream(>>) overloading(integer2) : " << endl;
-    cin >> integer2;
 
     cout << "integer1 now consists :";
     cout << integer1;
-    cout << "integer2 now consists :";
-    cout << integer2;
 
     cin.get();
     return 0;
 }
-
-
-
-
