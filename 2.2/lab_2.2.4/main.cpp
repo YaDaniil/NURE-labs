@@ -93,18 +93,11 @@ int main() {
         int length = 0;
         std::cout << "Enter size of the array: ";
         std::cin >> length;
-        //if (std::cin >> length)
-        //    while (std::cin.get() != '\n');
 
         Array<int> ints(length);
         std::cout << std::endl << "Array of Integers" << std::endl;
         std::cout << "Enter elements of array:" << std::endl;
         for (int i = 0; i < length; i++) {
-            //int n = 0;
-            //if ((std::cin >> n) && std::cin.good()) {
-            //    ints.addInt(n, i);
-            //    while (std::cin.get() != '\n');
-            //}
             int n;
             std::cin >> n;
             ints.addInt(n, i);
@@ -129,10 +122,10 @@ int main() {
         std::cout << std::endl << "Array of Chars" << std::endl;
         std::cout << "Enter elements of array:" << std::endl;
         getchar();
+
         for (int i = 0; i < length; i++) {
             char c = std::cin.get();
             getchar();
-            //while (std::cin.get() != '\n');
             chars.addChar(c, i);
         }
         std::cout << "Array: ";
