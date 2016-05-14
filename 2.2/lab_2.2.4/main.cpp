@@ -1,37 +1,163 @@
 #include <iostream>
-#include "Integer.h"
-using namespace std;
 
-int main()
+
+template <class T>
+
+class Array
 {
-    int arr1[] = {10, 20, 144};
-    int arr2[] = {1, 2, 6};
-    Integer integer1(arr1);
-    Integer integer2(arr2);
+private:
+    T *array;
+    int length;
 
-    cout << "Demonstration of ostream(<<) overloading: " << endl;
-    cout << "integer1: ";
-    cout << integer1;
-    cout << "integer2: ";
-    cout << integer2 << endl;
+public:
+    Array(int length) {
+        if (length <= 0 || length > 20000)
+            throw std::exception();
+        this->length = length;
+        array = new T[length];
+    }
 
-    cout << "Demonstration of \'==\' operator overloading: " << endl;
-    cout << "integer1 == integer2 : ";
-    cout << (integer1 == integer2) << endl;
-    cout << "Demonstration of \'!=\' operator overloading: " << endl;
-    cout << "integer1 != integer2 : ";
-    cout << (integer1 != integer2) << endl;
+    ~Array() {
+        delete [] array;
+        length = 0;
+    }
 
-    cout << "Demonstration of \'[]\' operator overloading: " << endl;
-    cout << "integer1[2] : ";
-    cout << integer1[7] << endl;
+    T& operator [] (int i) {
+        if (i < 0 || i > length)
+            throw std::out_of_range("Out of range exception");
+        return array[i];
+    }
 
-    cout << "Demonstration of istream(>>) overloading: " << endl;
-    cin >> integer1;
 
-    cout << "integer1 now consists :";
-    cout << integer1;
+    T& operator = (Array &that) {
+        if (&that == this)
+            return *this;
+        if (array)
+            delete[] array;
 
-    cin.get();
+        length = that.length;
+        if (that.array) {
+            array = new T [that.length];
+            for(int i = 0; i < that.length; i++) {
+                array[i] = that.array[i];
+            }
+        } else
+            array = 0;
+        return *this;
+    }
+
+
+    bool operator == (Array &that) {
+        if(that.length != length) {
+            return false;
+        } else
+            for (int i = 0; i < that.length; i++) {
+                if(array[i] != that.array[i])
+                    return false;
+            }
+        return true;
+    }
+
+
+    bool operator != (Array &that) {
+        return !(*this == that);
+    }
+
+    void addInt(int n, int i) {
+        this->array[i] = n;
+    }
+    void addChar(char n, int i) {
+        this->array[i] = n;
+    }
+
+
+    template <typename TT> friend std::ostream& operator << (std::ostream &stream, Array<TT> &that);
+    template <typename TT> friend std::istream& operator >> (std::istream &stream, Array<TT> &that);
+};
+
+template<class T> std::ostream& operator << (std::ostream &stream, Array<T> &obj) {
+    for(int i = 0; i < obj.length; i++)
+        stream << obj.array[i] << " ";
+    return stream;
+}
+
+template<class T> std::istream &operator >> (std::istream &stream, Array<T> &obj)
+{
+    for(int i = 0; i < obj.length; i++)
+        stream>>obj.array[i];
+    return stream;
+}
+
+int main() {
+    try {
+        int length = 0;
+        std::cout << "Enter size of the array: ";
+        std::cin >> length;
+        //if (std::cin >> length)
+        //    while (std::cin.get() != '\n');
+
+        Array<int> ints(length);
+        std::cout << std::endl << "Array of Integers" << std::endl;
+        std::cout << "Enter elements of array:" << std::endl;
+        for (int i = 0; i < length; i++) {
+            //int n = 0;
+            //if ((std::cin >> n) && std::cin.good()) {
+            //    ints.addInt(n, i);
+            //    while (std::cin.get() != '\n');
+            //}
+            int n;
+            std::cin >> n;
+            ints.addInt(n, i);
+        }
+
+        std::cout << "Array: ";
+        std::cout << ints << std::endl;
+        if (length > 1) {
+            int i, j = 0;
+            std::cout << "Сomparison of two elements:" << std::endl;
+            std::cout << "Enter index of first element: ";
+            std::cin >> i;
+            std::cout << "Enter index of second element: ";
+            std::cin >> j;
+            if (ints[i] == ints[j])
+                std::cout << "Elements are equal" << std::endl;
+            else
+                std::cout << "Elements are not equal" << std::endl;
+        }
+
+        Array<char> chars(length);
+        std::cout << std::endl << "Array of Chars" << std::endl;
+        std::cout << "Enter elements of array:" << std::endl;
+        getchar();
+        for (int i = 0; i < length; i++) {
+            char c = std::cin.get();
+            getchar();
+            //while (std::cin.get() != '\n');
+            chars.addChar(c, i);
+        }
+        std::cout << "Array: ";
+        std::cout << chars << std::endl;
+        if (length > 1) {
+            int i, j = 0;
+            std::cout << "Сomparison of two elements:" << std::endl;
+            std::cout << "Enter index of first element: "; std::cin >> i;
+            std::cout << "Enter index of second element: "; std::cin >> j;
+            if (chars[i] == chars[j])
+                std::cout << "Elements are equal" << std::endl;
+            else
+                std::cout << "Elements are not equal" << std::endl;
+        }
+    }
+    catch (std::bad_alloc) {
+        std::cout << "Fail to allocate the requested storage space" << std::endl;
+    }
+    catch (std::out_of_range) {
+        std::cout << "Out of range exception" << std::endl;
+    }
+    catch (std::exception e) {
+        std::cout << "An another exception was occured: " << e.what() << std::endl;
+    }
+
+    getchar();
     return 0;
 }
