@@ -15,7 +15,10 @@ public:
     Helper(ostream &out, int algorithm, const string &key) : out(out), algorithm(algorithm), key(key) {}
 
     void setOut(ostream& out) {
-        swap(this->out, out);
+        //swap(this->out, out);
+        this->out.copyfmt(out);
+        this->out.clear(out.rdstate());
+        this->out.basic_ios<char>::rdbuf(out.rdbuf());
     }
 
     void substitution(string data) {
@@ -84,8 +87,7 @@ Helper& operator << (Helper& obj, string data) {
     return obj;
 }
 
-int main()
-{
+int main() {
     cout << encrypt(SUBSTITUTION, "key") << "Hello";
     cout << encrypt(POLYALPHABETIC, "key") << "Hello";
     cout << encrypt(XOR, "key") << "Hello";
