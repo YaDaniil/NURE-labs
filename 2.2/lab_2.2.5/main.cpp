@@ -22,9 +22,8 @@ public:
     }
 
     void substitution(string data) {
-        for (int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.size(); i++)
             out << key[data[i]];
-        }
     }
 
     void polyalphabeticSubstitution(string data) {
@@ -42,14 +41,14 @@ public:
             j = (j + 1) % key.length();
         }
         //data.assign(encrypted);
-        data = encrypted;
+        out << encrypted;
     }
 
     void xorEncryption(string data) {
         string encrypted;
         for (int i = 0; i < data.size(); i++)
             encrypted[i] = data[i] ^ key[i];
-        data = encrypted;
+        out <<  encrypted;
     }
 
     void encrypt(string data) {
