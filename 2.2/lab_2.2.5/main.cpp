@@ -1,13 +1,8 @@
 #include <iostream>
-
+#include <assert.h>
 using namespace std;
 
-int main() {
-    cout << "Hello, World!" << endl;
-    return 0;
-}
-
-enum Algorithms {SUBSTITUTION, MULTI_SUBSTITUTION, XOR};
+enum Algorithms { SUBSTITUTION, POLYALPHABETIC, XOR };
 
 class Helper
 {
@@ -17,14 +12,84 @@ private:
     string key;
 public:
 
-    Helper(ostream &out, int algorithm, const string &key) : out(out), algorithm(algorithm), key(key) { }
+    Helper(ostream &out, int algorithm, const string &key) : out(out), algorithm(algorithm), key(key) {}
 
     void setOut(ostream& out) {
-        this->out = move(out);
+        swap(this->out, out);
     }
 
-    Helper& operator << (ostream& os, Helper obj) {
-        obj.setOut(os);
-        return obj;
+    void substitution(string data) {
+        for (int i = 0; i < data.size(); i++) {
+            out << key[data[i]];
+        }
     }
+
+    void polyalphabeticSubstitution(string data) {
+        string encrypted;
+
+        for (int i = 0, j = 0; i < data.length(); ++i) {
+            char c = data[i];
+
+            if (c >= 'a' && c <= 'z')
+                c += 'A' - 'a';
+            else if (c < 'A' || c > 'Z')
+                continue;
+
+            encrypted += (c + key[j] - 2 * 'A') % 26 + 'A';
+            j = (j + 1) % key.length();
+        }
+        //data.assign(encrypted);
+        data = encrypted;
+    }
+
+    void xorEncryption(string data) {
+        string encrypted;
+        for (int i = 0; i < data.size(); i++)
+            encrypted[i] = data[i] ^ key[i];
+        data = encrypted;
+    }
+
+    void encrypt(string data) {
+        switch (algorithm) {
+            case SUBSTITUTION:
+                substitution(data);
+                break;
+
+            case POLYALPHABETIC:
+                polyalphabeticSubstitution(data);
+                break;
+
+            case XOR:
+                xorEncryption(data);
+                break;
+            default:
+                assert("WTF");
+                break;
+        }
+    }
+
 };
+
+Helper encrypt(int algorithm, string key) {
+    return Helper(cout, algorithm, key);
+}
+
+Helper& operator << (ostream& os, Helper obj) {
+    obj.setOut(os);
+    return obj;
+}
+
+Helper& operator << (Helper& obj, string data) {
+    obj.encrypt(data);
+    return obj;
+}
+
+int main()
+{
+    cout << encrypt(SUBSTITUTION, "key") << "Hello";
+    cout << encrypt(POLYALPHABETIC, "key") << "Hello";
+    cout << encrypt(XOR, "key") << "Hello";
+
+    getchar();
+    return 0;
+}
