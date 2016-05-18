@@ -23,7 +23,7 @@ public:
 
     void substitution(string data) {
         for (int i = 0; i < data.size(); i++)
-            out << key[data[i]];
+            out << key[data[i % key.length()]];
     }
 
     void polyalphabeticSubstitution(string data) {
@@ -47,7 +47,7 @@ public:
     void xorEncryption(string data) {
         string encrypted;
         for (int i = 0; i < data.size(); i++)
-            encrypted[i] = data[i] ^ key[i];
+            encrypted[i] = data[i] ^ key[i % key.length()];
         out <<  encrypted;
     }
 
@@ -76,7 +76,7 @@ Helper encrypt(int algorithm, string key) {
     return Helper(cout, algorithm, key);
 }
 
-Helper& operator << (ostream& os, Helper obj) {
+Helper& operator << (ostream& os, Helper& obj) {
     obj.setOut(os);
     return obj;
 }
